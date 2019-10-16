@@ -7,6 +7,5 @@ public class Simulator {
         car.move();
         car.setCurrentRoad(road2);
         car.move();
-
     }
 }

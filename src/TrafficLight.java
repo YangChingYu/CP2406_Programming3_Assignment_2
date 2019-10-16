@@ -5,7 +5,7 @@ public class TrafficLight {
     public void operate(){
         double num = Math.random(); // gets random number between 0 and 1
         double chanceOfChanging = Math.round(num); // rounds that number
-        if(chanceOfChanging <= rateOfChange) {
+        if(chanceOfChanging <= rateOfChange) {  // checks whether light should be green or red
             currentColor = "red";
         }
         else
