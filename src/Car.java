@@ -15,27 +15,16 @@ public class Car {
         for(int i=0; i < currentRoad.numOfSegments; i++){
             if(i >= currentRoad.numOfSegments-2)
                 light.operate();
-            moving(light, i);
-
-        }
-    }
-    private void moving(TrafficLight light, int carPosition){
-        if(light.getCurrentColor() == "green"){
-            this.carPosition = carPosition;
-        }
-        else {
-            for(int j=0; j<3; j++){ // red light timer
-                if(carPosition == currentRoad.numOfSegments){
-                    this.carPosition = carPosition-1;
-                }
-                this.carPosition = carPosition;
-                System.out.print(this.carPosition * 10 + "m" + " ");
-                System.out.print("redLight ");
-
-
+            carPosition = i;
+            if(light.getCurrentColor().equals("red") && carPosition == currentRoad.numOfSegments-1) {
+                i = i-1; //stops car position
             }
-        }
-        System.out.print(this.carPosition * 10 + "m" + " ");
+            if(light.getCurrentColor() == "green")
+                System.out.println("car position:" + carPosition * 10 + "m" + " green light");
+            else
+                System.out.println("car position:" + carPosition * 10 + "m" + " red light");
+            //moving(light, i);
 
+        }
     }
 }
