@@ -11,10 +11,31 @@ public class Car {
         this.currentRoad = road;
     } // changes the road that the car is on
 
-    public void move(){
+    public void move(TrafficLight light){
         for(int i=0; i < currentRoad.numOfSegments; i++){
-            carPosition = i;
-            System.out.print(carPosition + "m" + " ");
+            if(i >= currentRoad.numOfSegments-2)
+                light.operate();
+            moving(light, i);
+
         }
+    }
+    private void moving(TrafficLight light, int carPosition){
+        if(light.getCurrentColor() == "green"){
+            this.carPosition = carPosition;
+        }
+        else {
+            for(int j=0; j<3; j++){ // red light timer
+                if(carPosition == currentRoad.numOfSegments){
+                    this.carPosition = carPosition-1;
+                }
+                this.carPosition = carPosition;
+                System.out.print(this.carPosition * 10 + "m" + " ");
+                System.out.print("redLight ");
+
+
+            }
+        }
+        System.out.print(this.carPosition * 10 + "m" + " ");
+
     }
 }

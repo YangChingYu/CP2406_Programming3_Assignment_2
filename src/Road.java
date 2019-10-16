@@ -1,15 +1,14 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class Road {
-    private TrafficLight[] trafficLights = new TrafficLight[1];
+    protected ArrayList<TrafficLight> trafficLights = new ArrayList<>();
     protected int numOfSegments; // each segment is 1m of road
-    Boolean containsTrafficLight;
+    private int trafficLightPosition;
+    private Boolean containsTrafficLight;
 
     Road(int numOfSegments, Boolean containsTrafficLight){
         this.numOfSegments = numOfSegments;
         this.containsTrafficLight = containsTrafficLight;
-        addTrafficLight();
     }
 
     public void nextRoad(){
@@ -19,9 +18,10 @@ public class Road {
         return numOfSegments;
     }
 
-    public void addTrafficLight(){
+    public void addTrafficLight(TrafficLight light){
         if(containsTrafficLight){
-            trafficLights[0] = new TrafficLight();
+            trafficLights.add(light);
+            trafficLightPosition = numOfSegments;
         }
     }
 }
