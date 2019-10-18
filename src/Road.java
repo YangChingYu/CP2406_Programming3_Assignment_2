@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Road {
     private static ArrayList<TrafficLight> trafficLights = new ArrayList<>();
-    protected int numOfSegments; // each segment is 1m of road
+    protected int numOfSegments; // each segment is 10m of road
     private static int trafficLightCount = -1;
     private Boolean containsTrafficLight;
     private TrafficLight tLOnCurrentRoad;
@@ -18,8 +18,10 @@ public class Road {
         tLOnCurrentRoad = trafficLights.get(trafficLightCount); //fix
     }
 
-    public static Road nextRoad(){
-        return Map.roads.get(1);    //fix
+    public static int nextRoad(Road currentRoad) {// retrieves last road added
+        int indexOfNextRoad;
+        return indexOfNextRoad = Map.roads.indexOf(currentRoad) + 1;
+
     }
 
     public int getRoadLength(){

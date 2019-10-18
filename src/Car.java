@@ -1,8 +1,8 @@
 public class Car {
     private int carPosition; // value that determines car position on road
-    private Road currentRoad;
+    private Road currentRoad; // road that the car is on
     Car(){
-        this.currentRoad = Map.roadsWithTrafficLights.get(0); //fix index
+        this.currentRoad = Map.roads.get(0); // car starts on first road created
     }
 
     public int getCarPosition(){ return carPosition; } // shows where the car is on the current road
@@ -22,7 +22,7 @@ public class Car {
             } else
                 carPosition += 1;
             if (carPosition == currentRoad.getRoadLength() && light.getCurrentColor().equals("green")) {
-                setCurrentRoad(Map.roads.get(0));
+                setCurrentRoad(Map.roads.get(Road.nextRoad(currentRoad)));
                 carPosition =  0;
                 i = 0;
             }
