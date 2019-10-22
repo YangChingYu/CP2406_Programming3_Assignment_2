@@ -1,33 +1,58 @@
 public class Car {
-    private int carPosition; // value that determines car position on road
-    private Road currentRoad; // road that the car is on
-    Car(){
-        this.currentRoad = Map.roads.get(0); // car starts on first road created
+    private String carName;
+    private Road road; // road that the car is on
+    private int carPosition = 0;
+    Car(Road road, String name){
+        this.road = road;
+        carName = name;
     }
 
-    public int getCarPosition(){ return carPosition; } // shows where the car is on the current road
+    private int getCarPosition(){ return carPosition; } // shows where the car is on the current road
 
-    public void setCurrentRoad(Road road){
-        this.currentRoad = road;
-    } // changes the road that the car is on
+    private void setCurrentRoad(Road road){
+        this.road = road;
+    }
+    private boolean checkIfAtEndOfRoad(){
+        return (carPosition == road.getRoadLength());
+    }
+    public boolean canMoveForward(Road road){
+        if(road.getTrafficLight() == null){
+            return true;
+        }
+        else {
+            TrafficLight light = road.getTrafficLight();
+            return light.getCurrentColor().equals("green");
+        }
+    }
+
+    private int getIndexOfCurrentRoad(){
+        return Map.roads.indexOf(road);
+    }
+    public Road nextRoad(){
+        return Map.roads.get(getIndexOfCurrentRoad() + 1);
+    }
 
 
-    public void move(TrafficLight light) {
-        for (int i = 0; i < currentRoad.getRoadLength(); i++) {
-            if (currentRoad.checkForTrafficLight()) // checks whether road contains a traffic light
-                light.operate();
-            if (light.getCurrentColor().equals("red") && getCarPosition() == currentRoad.getRoadLength() - 1) {
-                System.out.println("car stopped");
-                i -= 1;
-            } else
-                carPosition += 1;
-            if (carPosition == currentRoad.getRoadLength() && light.getCurrentColor().equals("green")) {
-                setCurrentRoad(Map.roads.get(Road.nextRoad(currentRoad)));
-                carPosition =  0;
-                i = 0;
+    public void move() {
+        for (int i = 1; i <= road.getRoadLength(); i++) {
+            if(carPosition == road.getRoadLength()-1) {
+                road.getTrafficLight().operate();  // fix for non TL
+                System.out.println(road.getTrafficLight().getCurrentColor());
             }
+            if(canMoveForward(road)) {
+                carPosition += 1;
+                System.out.println(carName + " position:" + getCarPosition() + "m");
+                if (checkIfAtEndOfRoad()) {
+                    setCurrentRoad(nextRoad());
+                    System.out.println("new road");
+                    i = -1;
+                    carPosition = 0;
 
-            System.out.println("car position:" + getCarPosition() * 10 + "m");
+                }
+            }
+            else
+                i--;
+
         }
     }
 

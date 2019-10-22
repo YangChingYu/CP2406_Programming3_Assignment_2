@@ -1,13 +1,18 @@
 import java.util.ArrayList;
 
 public class Map {
-    protected static ArrayList<Road> roads = new ArrayList<>(); //array that contains roads without lighs
-    protected static int roadCount = -1;
-
+    static ArrayList<Road> roads = new ArrayList<>();
+    static ArrayList<Car> cars = new ArrayList<>();
+    public Map(){
+            }
 
     public void addRoad(Road road){
         roads.add(road);
-        roadCount += 1;
+    }
+    public void addCar(Car car){
+        cars.add(car);
+    }
+    public void addTrafficLight(TrafficLight light) {
     }
 
 
