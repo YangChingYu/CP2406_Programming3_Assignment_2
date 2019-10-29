@@ -1,15 +1,25 @@
+import java.awt.*;
+
 public class Car {
     private String carName;
     private Road road; // road that the car is on
-    private int carPosition = 0;
+    private int carPosition = 0; // position on current road
+    protected int yPos; // current position on map
+    protected int xPos = 0; // current position on map
+    protected int  height;
+    protected int width;
+    public void paintMe(Graphics g){
+    }
     Car(Road road, String name){
         this.road = road;
         carName = name;
+        yPos = getRoadCarIsOn().roadYPos+10;
     }
     public Road getRoadCarIsOn(){
         return road;
     }
-    public int getCarPosition(){ return carPosition; } // shows where the car is on the current road
+    public int getCarPosition(){ return carPosition; }
+    private int getCarXPosition(){ return xPos; }
 
     private void setCurrentRoad(Road road){
         this.road = road;
@@ -38,7 +48,8 @@ public class Car {
     public void move() {
             if(canMoveForward(road)) {
                 carPosition += 1;
-                System.out.println(carName + " position:" + getCarPosition() + "m");
+                xPos +=1;
+                System.out.println(carName + " position:" + getCarXPosition() + "m");
                 if (checkIfAtEndOfRoad()) {
                     setCurrentRoad(nextRoad());
                     carPosition = 0;
