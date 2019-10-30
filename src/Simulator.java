@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.Graphics;
 
 public class Simulator implements ActionListener, Runnable {
+    private boolean running = false;
     private boolean roadExists = true;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
@@ -14,6 +15,11 @@ public class Simulator implements ActionListener, Runnable {
     private JButton startSim = new JButton("start");
     private JButton exitSim = new JButton("exit");
     Container south = new Container();
+
+    //west container
+    Container west = new Container();
+    JButton addSedan = new JButton("add sedan");
+    JButton addBus = new JButton("add bus");
 
     private Simulator(){
 
@@ -29,10 +35,15 @@ public class Simulator implements ActionListener, Runnable {
         exitSim.addActionListener(this);
         frame.add(south, BorderLayout.SOUTH);
 
+        west.setLayout(new GridLayout(2,1));
+        west.add(addSedan);
+        addSedan.addActionListener(this);
+        west.add(addBus);
+        addBus.addActionListener(this);
+        frame.add(west, BorderLayout.WEST);
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Sedan car = new Sedan(road1, "ford Falcon");
-        Map.cars.add(car);
         Map.trafficLights.add(light);
         frame.repaint();
 
@@ -44,62 +55,64 @@ public class Simulator implements ActionListener, Runnable {
 
     }
 
-    private void cycle(){
-        while(roadExists){
-            try{
-                Thread.sleep(500);
-            }
-            catch(Exception ignored){}
-            for(int j = 0; j < Map.trafficLights.size(); j++){
-                Map.trafficLights.get(j).operate();
-            }
-            for (int i = 0; i < Map.cars.size(); i++) {
-                try {
-                    Car currentCar = Map.cars.get(i);
-                    if(currentCar.getRoadCarIsOn().getTrafficLight() != null && currentCar.getCarPosition() == currentCar.getRoadCarIsOn().getRoadLength()-1) {
-                        System.out.println(currentCar.getRoadCarIsOn().getTrafficLight().getCurrentColor());
-                    }
-                    currentCar.move();
-                    frame.repaint();
-                } catch (Exception e) {
-                    roadExists = false;
-                    System.out.println("end of road");
-                }
-            }
-        }
-    }
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if(source == startSim){
-            Thread t = new Thread(this);
-            t.start();
+            if(running == false) {
+                running = true;
+                Thread t = new Thread(this);
+                t.start();
+            }
+        }
+        if(source == addBus){
+            Bus bus = new Bus(road1);
+            Map.cars.add(bus);
+            for (int x = 0; x < bus.getRoadCarIsOn().getRoadLength(); x = x + 60) {
+                bus.setCarXPosition(x);
+                bus.setCarYPosition(bus.getRoadCarIsOn().getRoadYPos()+10);
+                if(!bus.collision(x, bus.getCarWidth(), bus)){
+                    frame.repaint();
+                    return;
+                }
+            }
+        }
+        if(source == addSedan){
+            Sedan sedan = new Sedan(road1);
+            Map.cars.add(sedan);
+            sedan.setCarYPosition(sedan.getRoadCarIsOn().getRoadYPos()+10);
+            for (int x = 0; x < sedan.getRoadCarIsOn().getRoadLength(); x = x + 60) {
+                sedan.setCarXPosition(x);
+                if(!sedan.collision(x, sedan.getCarWidth(), sedan)){
+                    frame.repaint();
+                    return;
+                }
+
+            }
         }
     }
 
     @Override
     public void run() {
-        while(roadExists){
-            try{
-                Thread.sleep(500);
-            }
-            catch(Exception ignored){}
-            for(int j = 0; j < Map.trafficLights.size(); j++){
-                Map.trafficLights.get(j).operate();
-            }
-            for (int i = 0; i < Map.cars.size(); i++) {
+        while (running) {
                 try {
-                    Car currentCar = Map.cars.get(i);
-                    if(currentCar.getRoadCarIsOn().getTrafficLight() != null && currentCar.getCarPosition() == currentCar.getRoadCarIsOn().getRoadLength()-1) {
-                        System.out.println(currentCar.getRoadCarIsOn().getTrafficLight().getCurrentColor());
-                    }
-                    currentCar.move();
-                } catch (Exception e) {
-                    roadExists = false;
-                    System.out.println("end of road");
+                    Thread.sleep(300);
                 }
-            }
-            frame.repaint();
+                catch (Exception ignored) {
+                }
+                for (int j = 0; j < Map.trafficLights.size(); j++) {
+                    Map.trafficLights.get(j).operate();
+                }
+                for (int i = 0; i < Map.cars.size(); i++) {
+                        Car currentCar = Map.cars.get(i);
+                        if (currentCar.getRoadCarIsOn().getTrafficLight() != null && currentCar.getCarPosition() == currentCar.getRoadCarIsOn().getRoadLength()-1) {
+                            System.out.println(currentCar.getRoadCarIsOn().getTrafficLight().getCurrentColor());
+                        }
+                        currentCar.move();
+
+                }
+                frame.repaint();
+
         }
     }
 }
