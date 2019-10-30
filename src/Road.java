@@ -11,9 +11,9 @@ public class Road extends JPanel {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         g.setColor(Color.black);
-        g.fillRect(roadXPos, roadYPos,numOfSegments*50, roadWidth);
+        g.fillRect(roadXPos, roadYPos,numOfSegments*50 + 50, roadWidth);
         g.setColor(Color.white);
-        for(int j = 0; j < numOfSegments*50 ;j = j + 50) { // line being drawn
+        for(int j = 0; j < numOfSegments*50+50 ;j = j + 50) { // line being drawn 
             g.fillRect(j, roadWidth/2, 30, 5);
             }
         for(int c = 0; c < Map.cars.size() ;c++){

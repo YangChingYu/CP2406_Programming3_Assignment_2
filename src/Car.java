@@ -18,7 +18,10 @@ public class Car {
         return road;
     }
     public int getCarPosition(){ return carPosition; }
-    private int getCarXPosition(){ return xPos; }
+    public void setCarPosition(int position){
+        carPosition = position;
+    }
+    public int getCarXPosition(){ return xPos; }
     public void setCarXPosition(int x){
         xPos = x;
     }
@@ -34,12 +37,12 @@ public class Car {
     private boolean checkIfAtEndOfRoad(){
         return (carPosition == road.getRoadLength());
     }
-    public boolean collision(int x, int width, Car car){
+    public boolean collision(int x, Car car){
         for (int i = 0; i < Map.cars.size(); i++){
             Car c = Map.cars.get(i);
                 if(!car.equals(c)){ // if not checking current car
-                    if(car.getCarXPosition() < c.getCarXPosition() + c.getCarWidth() && //left side is left  of cars right side
-                            car.getCarXPosition() + car.getCarWidth() > c.getCarXPosition()){ // right side right of his left side
+                    if(x < c.getCarXPosition() + c.getCarWidth() && //left side is left  of cars right side
+                            x + c.getCarWidth() > c.getCarXPosition()){ // right side right of his left side
                         return true;
                     }
                 }

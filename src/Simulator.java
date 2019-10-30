@@ -68,10 +68,10 @@ public class Simulator implements ActionListener, Runnable {
         if(source == addBus){
             Bus bus = new Bus(road1);
             Map.cars.add(bus);
-            for (int x = 0; x < bus.getRoadCarIsOn().getRoadLength(); x = x + 60) {
+            for (int x = 0; x < bus.getRoadCarIsOn().getRoadLength()*50; x = x + 60) {
                 bus.setCarXPosition(x);
                 bus.setCarYPosition(bus.getRoadCarIsOn().getRoadYPos()+10);
-                if(!bus.collision(x, bus.getCarWidth(), bus)){
+                if(!bus.collision(x, bus)){
                     frame.repaint();
                     return;
                 }
@@ -81,9 +81,9 @@ public class Simulator implements ActionListener, Runnable {
             Sedan sedan = new Sedan(road1);
             Map.cars.add(sedan);
             sedan.setCarYPosition(sedan.getRoadCarIsOn().getRoadYPos()+10);
-            for (int x = 0; x < sedan.getRoadCarIsOn().getRoadLength(); x = x + 60) {
+            for (int x = 0; x < sedan.getRoadCarIsOn().getRoadLength()*50; x = x + 60) {
                 sedan.setCarXPosition(x);
-                if(!sedan.collision(x, sedan.getCarWidth(), sedan)){
+                if(!sedan.collision(x, sedan)){
                     frame.repaint();
                     return;
                 }
@@ -108,7 +108,10 @@ public class Simulator implements ActionListener, Runnable {
                         if (currentCar.getRoadCarIsOn().getTrafficLight() != null && currentCar.getCarPosition() == currentCar.getRoadCarIsOn().getRoadLength()-1) {
                             System.out.println(currentCar.getRoadCarIsOn().getTrafficLight().getCurrentColor());
                         }
-                        currentCar.move();
+                        if(!currentCar.collision(currentCar.getCarXPosition()+50, currentCar)){
+                            currentCar.move();
+                        }
+
 
                 }
                 frame.repaint();
