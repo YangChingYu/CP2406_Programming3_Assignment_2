@@ -1,7 +1,10 @@
+import java.awt.*;
+
 public class TrafficLight {
-    private double rateOfChange = 0.3;
+    private double rateOfChange = 0.2;
     private String currentColor = "green";
     private int redTime = 0;
+
 
     public String getCurrentColor(){
         return currentColor;
@@ -14,7 +17,7 @@ public class TrafficLight {
             redTime += 1;
         }
 
-        if(redTime == 3){  // gets the light changing colors after a certain amount of time elapses
+        if(redTime == 10){  // gets the light changing colors after a certain amount of time elapses
             redTime = 0;
             rateOfChange = 0.3;
         }

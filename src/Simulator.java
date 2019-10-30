@@ -100,8 +100,19 @@ public class Simulator implements ActionListener, Runnable {
                 }
                 catch (Exception ignored) {
                 }
-                for (int j = 0; j < Map.trafficLights.size(); j++) {
-                    Map.trafficLights.get(j).operate();
+                for (int j = 0; j < Map.roads.size(); j++) {
+                    Road r = Map.roads.get(j);
+                    TrafficLight l = r.getTrafficLight();
+                    if(l != null) {
+                        l.operate();
+                        if (l.getCurrentColor().equals("red")) {
+                            r.setLightColor(Color.red);
+                        }
+                        else{
+                            r.setLightColor(Color.GREEN);
+                        }
+                    }
+
                 }
                 for (int i = 0; i < Map.cars.size(); i++) {
                         Car currentCar = Map.cars.get(i);
