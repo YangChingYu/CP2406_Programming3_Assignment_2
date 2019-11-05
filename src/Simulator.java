@@ -9,7 +9,7 @@ public class Simulator implements ActionListener, Runnable {
     private boolean roadExists = true;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
-    Road road1 = new Road(10, "horizontal", light);
+    Road roadStart = new Road(6, "vertical",0, 270, light); // fixed starting road on map
 
     //south container
     private JButton startSim = new JButton("start");
@@ -23,10 +23,10 @@ public class Simulator implements ActionListener, Runnable {
 
     private Simulator(){
 
-        Map.roads.add(road1);
+        Map.roads.add(roadStart);
         frame.setSize(900,700);
         frame.setLayout(new BorderLayout());
-        frame.add(road1, BorderLayout.CENTER);
+        frame.add(roadStart, BorderLayout.CENTER);
 
         south.setLayout(new GridLayout(1, 2));
         south.add(startSim);
@@ -66,11 +66,11 @@ public class Simulator implements ActionListener, Runnable {
             }
         }
         if(source == addBus){
-            Bus bus = new Bus(road1);
+            Bus bus = new Bus(roadStart);
             Map.cars.add(bus);
-            for (int x = 0; x < bus.getRoadCarIsOn().getRoadLength()*50; x = x + 60) {
+            for (int x = roadStart.roadXPos; x < bus.getRoadCarIsOn().getRoadLength()*50; x = x + 30) {
                 bus.setCarXPosition(x);
-                bus.setCarYPosition(bus.getRoadCarIsOn().getRoadYPos()+10);
+                bus.setCarYPosition(bus.getRoadCarIsOn().getRoadYPos()+5);
                 if(!bus.collision(x, bus)){
                     frame.repaint();
                     return;
@@ -78,10 +78,10 @@ public class Simulator implements ActionListener, Runnable {
             }
         }
         if(source == addSedan){
-            Sedan sedan = new Sedan(road1);
+            Sedan sedan = new Sedan(roadStart);
             Map.cars.add(sedan);
-            sedan.setCarYPosition(sedan.getRoadCarIsOn().getRoadYPos()+10);
-            for (int x = 0; x < sedan.getRoadCarIsOn().getRoadLength()*50; x = x + 60) {
+            sedan.setCarYPosition(sedan.getRoadCarIsOn().getRoadYPos()+7);
+            for (int x = roadStart.roadXPos; x < sedan.getRoadCarIsOn().getRoadLength()*50; x = x + 30) {
                 sedan.setCarXPosition(x);
                 if(!sedan.collision(x, sedan)){
                     frame.repaint();
@@ -116,10 +116,7 @@ public class Simulator implements ActionListener, Runnable {
                 }
                 for (int i = 0; i < Map.cars.size(); i++) {
                         Car currentCar = Map.cars.get(i);
-                        if (currentCar.getRoadCarIsOn().getTrafficLight() != null && currentCar.getCarPosition() == currentCar.getRoadCarIsOn().getRoadLength()-1) {
-                            System.out.println(currentCar.getRoadCarIsOn().getTrafficLight().getCurrentColor());
-                        }
-                        if(!currentCar.collision(currentCar.getCarXPosition()+50, currentCar)){
+                        if(!currentCar.collision(currentCar.getCarXPosition()+30, currentCar)){
                             currentCar.move();
                         }
 

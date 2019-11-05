@@ -2,7 +2,6 @@ import java.awt.*;
 
 public class Car {
     private Road road; // road that the car is on
-    private int carPosition = 0; // position on current road
     protected int yPos; // current position on map
     protected int xPos; // current position on map
     protected int  height;
@@ -13,17 +12,14 @@ public class Car {
     }
     Car(Road road){
         this.road = road;
-        yPos = getRoadCarIsOn().roadYPos+10;
+        yPos = getRoadCarIsOn().roadYPos;
         xPos = getRoadCarIsOn().roadXPos;
     }
 
     public Road getRoadCarIsOn(){
         return road;
     }
-    public int getCarPosition(){ return carPosition; }
-    public void setCarPosition(int position){
-        carPosition = position;
-    }
+
     public int getCarXPosition(){ return xPos; }
     public void setCarXPosition(int x){
         xPos = x;
@@ -38,7 +34,7 @@ public class Car {
         this.road = road;
     }
     private boolean checkIfAtEndOfRoad(){
-        return (carPosition == road.getRoadLength());
+        return (xPos+width >= road.getRoadLength()*25);
     }
     public boolean collision(int x, Car car){
         for (int i = 0; i < Map.cars.size(); i++){
@@ -53,7 +49,7 @@ public class Car {
         return false;
     }
     private boolean canMoveForward(Road road){
-        if(carPosition == road.getRoadLength()-1) {
+        if(xPos+width >= road.getRoadLength()*25-25) {
             if (road.getTrafficLight() == null) {
                 return true;
             } else {
@@ -74,15 +70,14 @@ public class Car {
 
     public void move() {
             if(canMoveForward(road)) {
-                carPosition += 1;
-                xPos += 50;
+                xPos += 25;
                 if (checkIfAtEndOfRoad()) {
-                    carPosition = 0;
+                    xPos = road.getRoadXPos();
                     try {
                         setCurrentRoad(nextRoad());
                     }
                     catch(IndexOutOfBoundsException e){
-                        xPos = 0;
+                        xPos = road.getRoadXPos();
                         System.out.println("end of road");
                     }
 

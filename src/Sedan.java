@@ -3,8 +3,8 @@ import java.awt.*;
 public class Sedan extends Car{
     Sedan(Road road){
         super(road);
-        width = 60;
-        height = 25;
+        width = 30;
+        height = 12;
     }
     public void paintMeHorizontal(Graphics g){
         g.setColor(Color.BLUE);

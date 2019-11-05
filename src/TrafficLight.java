@@ -1,9 +1,10 @@
 import java.awt.*;
 
 public class TrafficLight {
-    private double rateOfChange = 0.1;
+    private double rateOfChange = 0.7;
     private String currentColor = "green";
     private int redTime = 0;
+    private int greenTime = 0;
 
 
     public String getCurrentColor(){
@@ -16,9 +17,14 @@ public class TrafficLight {
             rateOfChange = 1;
             redTime += 1;
         }
+        else{
+            rateOfChange = 0;
+            greenTime +=1;
+        }
 
-        if(redTime == 10){  // gets the light changing colors after a certain amount of time elapses
+        if(redTime == 10 || greenTime == 6){  // gets the light changing colors after a certain amount of time elapses
             redTime = 0;
+            greenTime = 0;
             rateOfChange = 0.3;
         }
         double num = Math.random(); // gets random number between 0 and 1
