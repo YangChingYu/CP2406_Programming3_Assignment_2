@@ -7,13 +7,16 @@ public class Car {
     protected int xPos; // current position on map
     protected int  height;
     protected int width;
-    public void paintMe(Graphics g){
+    public void paintMeHorizontal(Graphics g){
+    }
+    public void paintMeVertical(Graphics g){
     }
     Car(Road road){
         this.road = road;
         yPos = getRoadCarIsOn().roadYPos+10;
         xPos = getRoadCarIsOn().roadXPos;
     }
+
     public Road getRoadCarIsOn(){
         return road;
     }

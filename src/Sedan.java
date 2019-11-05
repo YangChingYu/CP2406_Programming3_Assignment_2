@@ -6,8 +6,12 @@ public class Sedan extends Car{
         width = 60;
         height = 25;
     }
-    public void paintMe(Graphics g){
+    public void paintMeHorizontal(Graphics g){
         g.setColor(Color.BLUE);
         g.fillRect(xPos, yPos, width, height);
+    }
+    public void paintMeVertical(Graphics g){
+        g.setColor(Color.BLUE);
+        g.fillRect(yPos, xPos, height, width);
     }
 }

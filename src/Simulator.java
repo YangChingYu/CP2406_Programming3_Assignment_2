@@ -9,7 +9,7 @@ public class Simulator implements ActionListener, Runnable {
     private boolean roadExists = true;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
-    Road road1 = new Road(10, light);
+    Road road1 = new Road(10, "horizontal", light);
 
     //south container
     private JButton startSim = new JButton("start");
@@ -24,7 +24,7 @@ public class Simulator implements ActionListener, Runnable {
     private Simulator(){
 
         Map.roads.add(road1);
-        frame.setSize(800,600);
+        frame.setSize(900,700);
         frame.setLayout(new BorderLayout());
         frame.add(road1, BorderLayout.CENTER);
 

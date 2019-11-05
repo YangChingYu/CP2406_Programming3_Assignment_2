@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class TrafficLight {
-    private double rateOfChange = 0.2;
+    private double rateOfChange = 0.1;
     private String currentColor = "green";
     private int redTime = 0;
 
