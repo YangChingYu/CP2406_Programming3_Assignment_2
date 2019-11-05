@@ -6,7 +6,6 @@ import java.awt.Graphics;
 
 public class Simulator implements ActionListener, Runnable {
     private boolean running = false;
-    private boolean roadExists = true;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
     Road roadStart = new Road(6, "vertical",0, 270, light); // fixed starting road on map
@@ -20,6 +19,7 @@ public class Simulator implements ActionListener, Runnable {
     Container west = new Container();
     JButton addSedan = new JButton("add sedan");
     JButton addBus = new JButton("add bus");
+    JButton addRoadWithLight = new JButton("add road");
 
     private Simulator(){
 
@@ -35,12 +35,15 @@ public class Simulator implements ActionListener, Runnable {
         exitSim.addActionListener(this);
         frame.add(south, BorderLayout.SOUTH);
 
-        west.setLayout(new GridLayout(2,1));
+        west.setLayout(new GridLayout(3,1));
         west.add(addSedan);
         addSedan.addActionListener(this);
         west.add(addBus);
         addBus.addActionListener(this);
+        west.add(addRoadWithLight);
+        addRoadWithLight.addActionListener(this);
         frame.add(west, BorderLayout.WEST);
+
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,6 +92,18 @@ public class Simulator implements ActionListener, Runnable {
                 }
 
             }
+        }
+        if(source == addRoadWithLight){
+            int length = 8;
+            String orientation = "horizontal";
+            int xPos = 0;
+            int yPos = 0;
+            //length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
+            orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal");
+            Road road = new Road(length, orientation,xPos, yPos, light);
+            Map.roads.add(road);
+            frame.repaint();
+
         }
     }
 

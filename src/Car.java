@@ -72,12 +72,12 @@ public class Car {
             if(canMoveForward(road)) {
                 xPos += 25;
                 if (checkIfAtEndOfRoad()) {
-                    xPos = road.getRoadXPos();
                     try {
                         setCurrentRoad(nextRoad());
                     }
                     catch(IndexOutOfBoundsException e){
                         xPos = road.getRoadXPos();
+                        yPos = road.getRoadYPos();
                         System.out.println("end of road");
                     }
 
