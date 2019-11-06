@@ -97,13 +97,17 @@ public class Simulator implements ActionListener, Runnable {
             int length;
             String orientation;
             int xPos = 0;
-            int yPos = 0;
+            int yPos = 270;
             length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
             orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal");
+            if (orientation.equals("horizontal")){
+                yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
+            }
+            else{
+                xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
+            }
             Road road = new Road(length, orientation,xPos, yPos, light);
             Map.roads.add(road);
-            Road previousRoad = Map.roads.get(Map.roads.indexOf(road)-1);
-            //xPos = previousRoad.getRoadXPos() + previousRoad.getRoadLength()*25;
             frame.repaint();
 
         }

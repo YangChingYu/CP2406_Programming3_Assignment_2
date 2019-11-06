@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Car {
     private Road road; // road that the car is on
@@ -34,7 +35,7 @@ public class Car {
         this.road = road;
     }
     private boolean checkIfAtEndOfRoad(){
-        return (xPos+width >= road.getRoadLength()*25);
+        return (xPos+width >= (road.getRoadLength()*25) + road.getRoadXPos());
     }
     public boolean collision(int x, Car car){
         for (int i = 0; i < Map.cars.size(); i++){
@@ -59,12 +60,46 @@ public class Car {
         }
         return true;
     }
-
     private int getIndexOfCurrentRoad(){
         return Map.roads.indexOf(road);
     }
-    private Road nextRoad(){
-        return Map.roads.get(getIndexOfCurrentRoad() + 1);
+    private Road nextRoad() {
+        Road currentRoad = Map.roads.get(getIndexOfCurrentRoad());
+        Road nextRoad = Map.roads.get(0);
+        int[] xPositions = new int[Map.roads.size()];
+        int[] yPositions = new int[Map.roads.size()];
+        for (int i = 0; i < Map.roads.size(); i++) {
+            xPositions[i] = Map.roads.get(i).getRoadXPos();
+            yPositions[i] = Map.roads.get(i).getRoadYPos();
+        }
+
+        int num = currentRoad.getRoadXPos(); //trying to find road with x position closest to this x position
+        int num2 = currentRoad.getRoadYPos(); //trying to find road with y position closest to this y position
+        int index = 0;
+        int index2 = 0;
+        int difference_1 = 10000;
+        int difference_2 = 10000;
+        for (int j = 0; j < xPositions.length; j++) { // loops through every position
+            int Difference_x = Math.abs(xPositions[j] - num);
+            int Difference_y = Math.abs(yPositions[j] - num2);
+            if (Difference_x < difference_1 && xPositions[j] != num) { // checks if difference is getting smaller
+                index = j;
+                difference_1 = Difference_x;
+            }
+            if (Difference_y < difference_2 && yPositions[j] != num2) { // checks if difference is getting smaller
+                index2 = j;
+                difference_2 = Difference_y;
+            }
+        }
+        int closestXPosition = xPositions[index];
+        int closestYPosition = yPositions[index2];
+        for(int z = 0; z<Map.roads.size();z++){
+            Road road = Map.roads.get(z);
+            if(road.getRoadXPos() == closestXPosition && road.getRoadYPos() == closestYPosition){
+                nextRoad = road;
+            }
+        }
+        return nextRoad;
     }
 
 
@@ -73,9 +108,10 @@ public class Car {
                 xPos += 25;
                 if (checkIfAtEndOfRoad()) {
                     try {
-                        setCurrentRoad(nextRoad());
-                        xPos = road.getRoadXPos();
-                        yPos = road.getRoadYPos() + 5;
+                        Road r = nextRoad();
+                        setCurrentRoad(r);
+                        xPos = r.getRoadXPos();
+                        yPos = r.getRoadYPos() + 5;
                     }
                     catch(IndexOutOfBoundsException e){
                         Road startRoad = Map.roads.get(0);
