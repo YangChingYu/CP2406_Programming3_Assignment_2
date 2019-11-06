@@ -102,11 +102,13 @@ public class Simulator implements ActionListener, Runnable {
             orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal");
             if (orientation.equals("horizontal")){
                 yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
+                xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
             }
             else{
                 xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
+                yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
             }
-            Road road = new Road(length, orientation,xPos, yPos, light);
+            Road road = new Road(length, orientation,xPos, yPos, new TrafficLight());
             Map.roads.add(road);
             frame.repaint();
 
