@@ -74,10 +74,14 @@ public class Car {
                 if (checkIfAtEndOfRoad()) {
                     try {
                         setCurrentRoad(nextRoad());
+                        xPos = road.getRoadXPos();
+                        yPos = road.getRoadYPos() + 5;
                     }
                     catch(IndexOutOfBoundsException e){
-                        xPos = road.getRoadXPos();
-                        yPos = road.getRoadYPos();
+                        Road startRoad = Map.roads.get(0);
+                        setCurrentRoad(startRoad);
+                        xPos = startRoad.getRoadXPos();
+                        yPos = startRoad.getRoadYPos()+5;
                         System.out.println("end of road");
                     }
 

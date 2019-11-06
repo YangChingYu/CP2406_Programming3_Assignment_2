@@ -8,7 +8,7 @@ public class Simulator implements ActionListener, Runnable {
     private boolean running = false;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
-    Road roadStart = new Road(6, "vertical",0, 270, light); // fixed starting road on map
+    Road roadStart = new Road(6, "horizontal",0, 270, light); // fixed starting road on map
 
     //south container
     private JButton startSim = new JButton("start");
@@ -24,7 +24,7 @@ public class Simulator implements ActionListener, Runnable {
     private Simulator(){
 
         Map.roads.add(roadStart);
-        frame.setSize(900,700);
+        frame.setSize(1200,700);
         frame.setLayout(new BorderLayout());
         frame.add(roadStart, BorderLayout.CENTER);
 
@@ -94,14 +94,16 @@ public class Simulator implements ActionListener, Runnable {
             }
         }
         if(source == addRoadWithLight){
-            int length = 8;
-            String orientation = "horizontal";
+            int length;
+            String orientation;
             int xPos = 0;
             int yPos = 0;
-            //length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
+            length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
             orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal");
             Road road = new Road(length, orientation,xPos, yPos, light);
             Map.roads.add(road);
+            Road previousRoad = Map.roads.get(Map.roads.indexOf(road)-1);
+            //xPos = previousRoad.getRoadXPos() + previousRoad.getRoadLength()*25;
             frame.repaint();
 
         }
