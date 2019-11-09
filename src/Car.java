@@ -35,7 +35,14 @@ public class Car {
         this.road = road;
     }
     private boolean checkIfAtEndOfRoad(){
-        return (xPos+width >= (road.getRoadLength()*25) + road.getRoadXPos());
+        if(road.getTrafficDirection().equals("east") || road.getTrafficDirection().equals("south")){
+            return (xPos+width >= (road.getRoadLength()*25) + road.getRoadXPos());
+        }
+        else if(road.getTrafficDirection().equals("west") || road.getTrafficDirection().equals("north")){
+            return (xPos <= (road.getRoadXPos()));
+        }
+        else
+            return true;
     }
     public boolean collision(int x, Car car){
         for (int i = 0; i < Map.cars.size(); i++){
@@ -97,13 +104,24 @@ public class Car {
 
     public void move() {
         if(canMoveForward()) {
-            xPos += 25;
+            if(road.getTrafficDirection().equals("east") || road.getTrafficDirection().equals("south")) {
+                xPos += 25;
+            }
+            else if(road.getTrafficDirection().equals("west") || road.getTrafficDirection().equals("north")){
+                xPos -= 25;
+            }
             if (checkIfAtEndOfRoad()) {
                 try {
                     Road r = nextRoad();
                     setCurrentRoad(r);
-                    xPos = r.getRoadXPos();
-                    yPos = r.getRoadYPos() + 5;
+                    if(road.getOrientation().equals("horizontal") && road.getTrafficDirection().equals("east") || road.getOrientation().equals("vertical") && road.getTrafficDirection().equals("south")) {
+                        xPos = r.getRoadXPos();
+                        yPos = r.getRoadYPos() + 5;
+                    }
+                    else if(road.getOrientation().equals("horizontal") && road.getTrafficDirection().equals("west") || road.getOrientation().equals("vertical") && road.getTrafficDirection().equals("north")){
+                        yPos = r.getRoadYPos() + 5;
+                        xPos = r.getEndRoadXPos() - getCarWidth();
+                    }
                 }
                 catch (IndexOutOfBoundsException e){
                     setCurrentRoad(road);

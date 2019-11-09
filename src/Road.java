@@ -11,6 +11,7 @@ public class Road extends JPanel {
     final int endRoadXPos;
     private Color lightColor = Color.green;
     private String orientation;
+    String trafficDirection;
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -78,7 +79,7 @@ public class Road extends JPanel {
         }
     }
 
-    Road(int numOfSegments, String orientation, int xPos, int yPos){
+    Road(int numOfSegments, String orientation, int xPos, int yPos, String direction){
         super();
         this.numOfSegments = numOfSegments*2;
         this.orientation = orientation;
@@ -86,16 +87,18 @@ public class Road extends JPanel {
         this.roadYPos = yPos;
         this.endRoadXPos = roadXPos + numOfSegments * 25;
         this.endRoadYPos = roadYPos + numOfSegments * 25;
+        this.trafficDirection = direction;
     }
-    Road(int numOfSegments, String orientation, int xPos, int yPos, TrafficLight light){
+    Road(int numOfSegments, String orientation, int xPos, int yPos, String direction, TrafficLight light){
         super();
         this.numOfSegments = numOfSegments*2;
         this.orientation = orientation;
         this.light = light;
         this.roadXPos = xPos;
         this.roadYPos = yPos;
-        this.endRoadXPos = roadXPos + numOfSegments * 25;
-        this.endRoadYPos = roadYPos + numOfSegments * 25;
+        this.endRoadXPos = roadXPos + numOfSegments * 50;
+        this.endRoadYPos = roadYPos + numOfSegments * 50;
+        this.trafficDirection = direction;
 
     }
     public String getOrientation(){ return orientation;}
@@ -111,6 +114,13 @@ public class Road extends JPanel {
     public int getRoadXPos(){
         return roadXPos;
     }
+    public int getEndRoadYPos(){
+        return endRoadYPos;
+    }
+    public int getEndRoadXPos(){
+        return endRoadXPos;
+    }
+    public String getTrafficDirection(){ return trafficDirection; }
     public void setLightColor(Color c){
         lightColor = c;
     }

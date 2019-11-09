@@ -8,7 +8,7 @@ public class Simulator implements ActionListener, Runnable {
     private boolean running = false;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
-    Road roadStart = new Road(6, "horizontal",0, 270, light); // fixed starting road on map
+    Road roadStart = new Road(6, "horizontal",0, 270, "east", light); // fixed starting road on map
 
     //south container
     private JButton startSim = new JButton("start");
@@ -94,12 +94,14 @@ public class Simulator implements ActionListener, Runnable {
             }
         }
         if(source == addRoadWithLight){
+            Boolean incorrect = true;
             int length;
             String orientation;
+            String direction = "";
             int xPos = 0;
             int yPos = 270;
             length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
-            orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal");
+            orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal").toLowerCase();
             if (orientation.equals("horizontal")){
                 yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
                 xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
@@ -108,7 +110,18 @@ public class Simulator implements ActionListener, Runnable {
                 xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
                 yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
             }
-            Road road = new Road(length, orientation,xPos, yPos, new TrafficLight());
+            while(incorrect){
+                direction = (JOptionPane.showInputDialog("enter direction of traffic")).toLowerCase();
+                if(direction.equals("east") && orientation.equals("horizontal") || direction.equals("west") && orientation.equals("horizontal")){
+                    incorrect = false;
+                }
+                else if(direction.equals("north") && orientation.equals("vertical") || direction.equals("south") && orientation.equals("vertical")){
+                    incorrect = false;
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "incorrect input ");
+            }
+            Road road = new Road(length, orientation,xPos, yPos, direction, new TrafficLight());
             Map.roads.add(road);
             frame.repaint();
 
