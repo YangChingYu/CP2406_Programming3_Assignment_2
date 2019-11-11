@@ -29,7 +29,7 @@ public class Road extends JPanel {
                     }
                 }
                 if (r.getTrafficLight() != null) {
-                    r.paintLightVertical(g);
+                    r.paintLight(g);
                 }
             }
             else{
@@ -40,26 +40,40 @@ public class Road extends JPanel {
                     }
                 }
                 if (r.getTrafficLight() != null) {
-                    r.paintLightHorizontal(g);
+                    r.paintLight(g);
                 }
             }
         }
     }
 
-    // paints traffic light for horizontal road
-    public void paintLightHorizontal(Graphics g){
+    // paints traffic light
+    public void paintLight(Graphics g){
         g.setColor(lightColor);
-        g.fillRect(roadXPos+numOfSegments*25-10, roadYPos-20, 10, 20);
-        g.setColor(Color.black);
-        g.drawRect(roadXPos+numOfSegments*25-10, roadYPos-20, 10, 20);
+        if(getOrientation().equals("horizontal")) {
+            if (getTrafficDirection().equals("east")) {
+                g.fillRect(roadXPos + numOfSegments * 25 - 10, roadYPos - 20, 10, 20);
+                g.setColor(Color.black);
+                g.drawRect(roadXPos + numOfSegments * 25 - 10, roadYPos - 20, 10, 20);
+            } else {
+                g.fillRect(roadXPos, roadYPos - 20, 10, 20);
+                g.setColor(Color.black);
+                g.drawRect(roadXPos, roadYPos - 20, 10, 20);
+            }
+        }
+        else{
+            if (getTrafficDirection().equals("south")) {
+                g.fillRect(roadYPos - 20, roadXPos + numOfSegments * 25 - 10, 20, 10);
+                g.setColor(Color.black);
+                g.drawRect(roadYPos - 20, roadXPos + numOfSegments * 25 - 10, 20, 10);
+            }
+            else{
+                g.fillRect(roadYPos - 20, roadXPos, 20, 10);
+                g.setColor(Color.black);
+                g.drawRect(roadYPos - 20, roadXPos, 20, 10);
+            }
+        }
     }
-    // paints traffic light for vertical road
-    public void paintLightVertical(Graphics g){
-        g.setColor(lightColor);
-        g.fillRect( roadYPos-20, roadXPos+numOfSegments*25-10, 20, 10);
-        g.setColor(Color.black);
-        g.drawRect( roadYPos-20, roadXPos+numOfSegments*25-10, 20, 10);
-    }
+
     public void paintRoad(Graphics g){
         if(orientation.equals("horizontal")) {
             g.setColor(Color.black);

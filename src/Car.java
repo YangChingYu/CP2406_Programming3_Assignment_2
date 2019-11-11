@@ -25,7 +25,7 @@ public class Car {
     public void setCarXPosition(int x){
         xPos = x;
     }
-    private int getCarYPosition(){ return yPos; }
+    public int getCarYPosition(){ return yPos; }
     public void setCarYPosition(int y){
         yPos = y;
     }
@@ -45,19 +45,30 @@ public class Car {
             return true;
     }
     public boolean collision(int x, Car car){
-        for (int i = 0; i < Map.cars.size(); i++){
+        String direction = getRoadCarIsOn().getTrafficDirection();
+        for (int i = 0; i < Map.cars.size(); i++) {
             Car c = Map.cars.get(i);
-                if(!car.equals(c)){ // if not checking current car
-                    if(x < c.getCarXPosition() + c.getCarWidth() && //left side is left  of cars right side
-                            x + c.getCarWidth() > c.getCarXPosition()){ // right side right of his left side
+            if (c.getRoadCarIsOn() == getRoadCarIsOn() && car.getCarYPosition() == c.getCarYPosition()) {
+                int otherCarXPosition = c.getCarXPosition();
+                int otherCarWidth = c.getCarWidth();
+                if (!car.equals(c)) { // if not checking current car
+                    if (x < otherCarXPosition + otherCarWidth && //left side is left  of cars right side
+                            x + otherCarWidth > otherCarXPosition && (direction.equals("east") || direction.equals("south"))) { // right side right of his left side
+                        return true;
+                    }
+                    else if (x < otherCarXPosition + otherCarWidth * 2 - 15 && x + car.getCarWidth() > otherCarXPosition &&
+                            (direction.equals("west") || direction.equals("north"))) {
                         return true;
                     }
                 }
             }
+        }
         return false;
     }
     private boolean canMoveForward(){
-        if(xPos+width >= getRoadCarIsOn().getRoadLength()*25-25+getRoadCarIsOn().getRoadXPos()) {
+        String direction = getRoadCarIsOn().getTrafficDirection();
+        if(xPos+width >= getRoadCarIsOn().getRoadLength()*25-25+getRoadCarIsOn().getRoadXPos() && (direction.equals("east") || direction.equals("south"))
+                || xPos <= getRoadCarIsOn().getRoadXPos()+25 && ( direction.equals("west") || direction.equals("north") )) {
             if (getRoadCarIsOn().getTrafficLight() == null) {
                 return true;
             }

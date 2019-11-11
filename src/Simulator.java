@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Simulator implements ActionListener, Runnable {
     private boolean running = false;
@@ -83,7 +84,7 @@ public class Simulator implements ActionListener, Runnable {
         if(source == addSedan){
             Sedan sedan = new Sedan(roadStart);
             Map.cars.add(sedan);
-            sedan.setCarYPosition(sedan.getRoadCarIsOn().getRoadYPos()+7);
+            sedan.setCarYPosition(sedan.getRoadCarIsOn().getRoadYPos()+5);
             for (int x = roadStart.roadXPos; x < sedan.getRoadCarIsOn().getRoadLength()*50; x = x + 30) {
                 sedan.setCarXPosition(x);
                 if(!sedan.collision(x, sedan)){
@@ -130,6 +131,8 @@ public class Simulator implements ActionListener, Runnable {
 
     @Override
     public void run() {
+        boolean carCollision = false;
+        ArrayList<Boolean> trueCases = new ArrayList<Boolean>();
         while (running) {
                 try {
                     Thread.sleep(300);
@@ -152,11 +155,37 @@ public class Simulator implements ActionListener, Runnable {
                 }
                 for (int i = 0; i < Map.cars.size(); i++) {
                         Car currentCar = Map.cars.get(i);
-                        if(!currentCar.collision(currentCar.getCarXPosition()+30, currentCar)){
+                        String direction = currentCar.getRoadCarIsOn().getTrafficDirection();
+                        if(!currentCar.collision(currentCar.getCarXPosition() + 30, currentCar) && (direction.equals("east") || direction.equals("south"))
+                                || !currentCar.collision(currentCar.getCarXPosition(), currentCar) && (direction.equals("west") || direction.equals("north"))){
                             currentCar.move();
                         }
-
-
+                        else{
+                            for(int z=0; z< Map.cars.size(); z++) {
+                                Car otherCar = Map.cars.get(z);
+                                if (otherCar.getCarYPosition() != currentCar.getCarYPosition()) {
+                                    if (currentCar.getCarXPosition() + currentCar.getCarWidth() < otherCar.getCarXPosition()) {
+                                        trueCases.add(true); // safe to switch lane
+                                    }
+                                    else {
+                                        trueCases.add(false); // not safe to switch lane
+                                    }
+                                }
+                            }
+                            for (int l = 0; l < trueCases.size(); l++) {
+                                if (!trueCases.get(l)) {
+                                    carCollision = true;
+                                    break;
+                                }
+                            }
+                            if(!carCollision){
+                                currentCar.setCarYPosition(currentCar.getRoadCarIsOn().getRoadYPos() + 30);
+                            }
+                            for(int m =0; m<trueCases.size(); m++){
+                                trueCases.remove(m);
+                            }
+                            carCollision = false;
+                        }
                 }
                 frame.repaint();
 
