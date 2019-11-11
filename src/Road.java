@@ -110,8 +110,8 @@ public class Road extends JPanel {
         this.light = light;
         this.roadXPos = xPos;
         this.roadYPos = yPos;
-        this.endRoadXPos = roadXPos + numOfSegments * 50;
-        this.endRoadYPos = roadYPos + numOfSegments * 50;
+        this.endRoadXPos = roadXPos + numOfSegments * 25;
+        this.endRoadYPos = roadYPos + numOfSegments * 25;
         this.trafficDirection = direction;
 
     }

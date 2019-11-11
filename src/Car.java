@@ -126,12 +126,22 @@ public class Car {
                     Road r = nextRoad();
                     setCurrentRoad(r);
                     if(road.getOrientation().equals("horizontal") && road.getTrafficDirection().equals("east") || road.getOrientation().equals("vertical") && road.getTrafficDirection().equals("south")) {
-                        xPos = r.getRoadXPos();
-                        yPos = r.getRoadYPos() + 5;
+                        for (int x = getRoadCarIsOn().getRoadXPos(); x < getRoadCarIsOn().getRoadLength()*25; x = x + 30) {
+                            setCarXPosition(x);
+                            setCarYPosition(getRoadCarIsOn().getRoadYPos()+5);
+                            if(!collision(x, this)){
+                                return;
+                            }
+                        }
                     }
                     else if(road.getOrientation().equals("horizontal") && road.getTrafficDirection().equals("west") || road.getOrientation().equals("vertical") && road.getTrafficDirection().equals("north")){
-                        yPos = r.getRoadYPos() + 5;
-                        xPos = r.getEndRoadXPos() - getCarWidth();
+                        for (int x = getRoadCarIsOn().getRoadXPos() + getRoadCarIsOn().getRoadLength()*25 - getCarWidth(); x > getRoadCarIsOn().getRoadXPos(); x = x - 30) {
+                            setCarXPosition(x);
+                            setCarYPosition(getRoadCarIsOn().getRoadYPos()+5);
+                            if(!collision(x, this)){
+                                return;
+                            }
+                        }
                     }
                 }
                 catch (IndexOutOfBoundsException e){

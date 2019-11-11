@@ -20,7 +20,7 @@ public class Simulator implements ActionListener, Runnable {
     Container west = new Container();
     JButton addSedan = new JButton("add sedan");
     JButton addBus = new JButton("add bus");
-    JButton addRoadWithLight = new JButton("add road");
+    JButton addRoad = new JButton("add road");
 
     private Simulator(){
 
@@ -41,8 +41,8 @@ public class Simulator implements ActionListener, Runnable {
         addSedan.addActionListener(this);
         west.add(addBus);
         addBus.addActionListener(this);
-        west.add(addRoadWithLight);
-        addRoadWithLight.addActionListener(this);
+        west.add(addRoad);
+        addRoad.addActionListener(this);
         frame.add(west, BorderLayout.WEST);
 
 
@@ -94,13 +94,15 @@ public class Simulator implements ActionListener, Runnable {
 
             }
         }
-        if(source == addRoadWithLight){
+        if(source == addRoad){
             Boolean incorrect = true;
             int length;
             String orientation;
             String direction = "";
             int xPos = 0;
             int yPos = 270;
+            Boolean hasLight;
+            hasLight = Boolean.parseBoolean(JOptionPane.showInputDialog("does it contain a traffic light\n enter true or false"));
             length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
             orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal").toLowerCase();
             if (orientation.equals("horizontal")){
@@ -122,8 +124,14 @@ public class Simulator implements ActionListener, Runnable {
                 else
                     JOptionPane.showMessageDialog(null, "incorrect input ");
             }
-            Road road = new Road(length, orientation,xPos, yPos, direction, new TrafficLight());
-            Map.roads.add(road);
+            if(hasLight) {
+                Road road = new Road(length, orientation, xPos, yPos, direction, new TrafficLight());
+                Map.roads.add(road);
+            }
+            else{
+                Road road = new Road(length, orientation, xPos, yPos, direction);
+                Map.roads.add(road);
+            }
             frame.repaint();
 
         }
