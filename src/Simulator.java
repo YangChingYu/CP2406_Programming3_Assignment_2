@@ -14,24 +14,24 @@ public class Simulator implements ActionListener, Runnable {
     //south container
     private JButton startSim = new JButton("start");
     private JButton exitSim = new JButton("exit");
-    Container south = new Container();
-
+    private JButton removeRoad = new JButton("remove last road");
+    private Container south = new Container();
     //west container
-    Container west = new Container();
-    JButton addSedan = new JButton("add sedan");
-    JButton addBus = new JButton("add bus");
-    JButton addRoad = new JButton("add road");
+    private Container west = new Container();
+    private JButton addSedan = new JButton("add sedan");
+    private JButton addBus = new JButton("add bus");
+    private JButton addRoad = new JButton("add road");
     //road orientation selection
-    ButtonGroup selections = new ButtonGroup();
-    JRadioButton horizontal = new JRadioButton("horizontal");
-    JRadioButton vertical = new JRadioButton("vertical");
+    private ButtonGroup selections = new ButtonGroup();
+    private JRadioButton horizontal = new JRadioButton("horizontal");
+    private JRadioButton vertical = new JRadioButton("vertical");
     //has traffic light selection
-    ButtonGroup selections2 = new ButtonGroup();
-    JRadioButton hasLight = new JRadioButton("traffic light(true)");
-    JRadioButton noLight = new JRadioButton("traffic light(false)");
+    private ButtonGroup selections2 = new ButtonGroup();
+    private JRadioButton hasLight = new JRadioButton("traffic light(true)");
+    private JRadioButton noLight = new JRadioButton("traffic light(false)");
     //road length
-    JLabel label = new JLabel("Enter road length");
-    JTextField length = new JTextField();
+    private JLabel label = new JLabel("Enter road length");
+    private JTextField length = new JTextField();
 
     private Simulator(){
 
@@ -40,11 +40,14 @@ public class Simulator implements ActionListener, Runnable {
         frame.setLayout(new BorderLayout());
         frame.add(roadStart, BorderLayout.CENTER);
 
-        south.setLayout(new GridLayout(1, 2));
+        //buttons on the south side
+        south.setLayout(new GridLayout(1, 3));
         south.add(startSim);
         startSim.addActionListener(this);
         south.add(exitSim);
         exitSim.addActionListener(this);
+        south.add(removeRoad);
+        removeRoad.addActionListener(this);
         frame.add(south, BorderLayout.SOUTH);
 
         //buttons on west side
@@ -61,6 +64,7 @@ public class Simulator implements ActionListener, Runnable {
         selections.add(horizontal);
         west.add(vertical);
         vertical.addActionListener(this);
+        horizontal.setSelected(true);
         west.add(horizontal);
         horizontal.addActionListener(this);
 
@@ -70,6 +74,7 @@ public class Simulator implements ActionListener, Runnable {
         hasLight.addActionListener(this);
         west.add(noLight);
         noLight.addActionListener(this);
+        noLight.setSelected(true);
 
         west.add(label);
         west.add(length);
@@ -97,6 +102,12 @@ public class Simulator implements ActionListener, Runnable {
                 running = true;
                 Thread t = new Thread(this);
                 t.start();
+            }
+        }
+        if(source == removeRoad){
+            if(Map.roads.size()>1) {
+                Map.roads.remove(Map.roads.size() - 1);
+                frame.repaint();
             }
         }
         if(source == addBus){
@@ -131,7 +142,7 @@ public class Simulator implements ActionListener, Runnable {
             String direction = "";
             int xPos = 0;
             int yPos = 270;
-            Boolean lightOnRoad = true;
+            Boolean lightOnRoad = false;
             if(vertical.isSelected()){
                 orientation = "vertical";
             }
