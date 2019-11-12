@@ -21,6 +21,17 @@ public class Simulator implements ActionListener, Runnable {
     JButton addSedan = new JButton("add sedan");
     JButton addBus = new JButton("add bus");
     JButton addRoad = new JButton("add road");
+    //road orientation selection
+    ButtonGroup selections = new ButtonGroup();
+    JRadioButton horizontal = new JRadioButton("horizontal");
+    JRadioButton vertical = new JRadioButton("vertical");
+    //has traffic light selection
+    ButtonGroup selections2 = new ButtonGroup();
+    JRadioButton hasLight = new JRadioButton("traffic light(true)");
+    JRadioButton noLight = new JRadioButton("traffic light(false)");
+    //road length
+    JLabel label = new JLabel("Enter road length");
+    JTextField length = new JTextField();
 
     private Simulator(){
 
@@ -36,16 +47,35 @@ public class Simulator implements ActionListener, Runnable {
         exitSim.addActionListener(this);
         frame.add(south, BorderLayout.SOUTH);
 
-        west.setLayout(new GridLayout(3,1));
+        //buttons on west side
+        west.setLayout(new GridLayout(9,1));
         west.add(addSedan);
         addSedan.addActionListener(this);
         west.add(addBus);
         addBus.addActionListener(this);
         west.add(addRoad);
         addRoad.addActionListener(this);
+
+        //radio buttons on west side
+        selections.add(vertical);
+        selections.add(horizontal);
+        west.add(vertical);
+        vertical.addActionListener(this);
+        west.add(horizontal);
+        horizontal.addActionListener(this);
+
+        selections2.add(hasLight);
+        selections2.add(noLight);
+        west.add(hasLight);
+        hasLight.addActionListener(this);
+        west.add(noLight);
+        noLight.addActionListener(this);
+
+        west.add(label);
+        west.add(length);
+        length.addActionListener(this);
+
         frame.add(west, BorderLayout.WEST);
-
-
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Map.trafficLights.add(light);
@@ -96,15 +126,32 @@ public class Simulator implements ActionListener, Runnable {
         }
         if(source == addRoad){
             Boolean incorrect = true;
-            int length;
-            String orientation;
+            int roadLength = 5;
+            String orientation = "horizontal";
             String direction = "";
             int xPos = 0;
             int yPos = 270;
-            Boolean hasLight;
-            hasLight = Boolean.parseBoolean(JOptionPane.showInputDialog("does it contain a traffic light\n enter true or false"));
-            length = Integer.parseInt(JOptionPane.showInputDialog("enter road length"));
-            orientation = JOptionPane.showInputDialog("enter road orientation\n vertical or horizontal").toLowerCase();
+            Boolean lightOnRoad = true;
+            if(vertical.isSelected()){
+                orientation = "vertical";
+            }
+            else if(horizontal.isSelected()){
+                orientation = "horizontal";
+            }
+            if(hasLight.isSelected()){
+                lightOnRoad = true;
+            }
+            else if(noLight.isSelected()){
+                lightOnRoad = false;
+            }
+            try {
+                roadLength = Integer.parseInt(length.getText());
+                incorrect = false;
+            }
+            catch (Exception error) {
+                JOptionPane.showMessageDialog(null, "road length needs an integer");
+                length.setText("5");
+            }
             if (orientation.equals("horizontal")){
                 yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
                 xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
@@ -124,12 +171,12 @@ public class Simulator implements ActionListener, Runnable {
                 else
                     JOptionPane.showMessageDialog(null, "incorrect input ");
             }
-            if(hasLight) {
-                Road road = new Road(length, orientation, xPos, yPos, direction, new TrafficLight());
+            if(lightOnRoad) {
+                Road road = new Road(roadLength, orientation, xPos, yPos, direction, new TrafficLight());
                 Map.roads.add(road);
             }
             else{
-                Road road = new Road(length, orientation, xPos, yPos, direction);
+                Road road = new Road(roadLength, orientation, xPos, yPos, direction);
                 Map.roads.add(road);
             }
             frame.repaint();
