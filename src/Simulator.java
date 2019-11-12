@@ -2,20 +2,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class Simulator implements ActionListener, Runnable {
+public class Simulator implements ActionListener, Runnable, MouseListener {
+    private int x, y;
     private boolean running = false;
     private JFrame frame = new JFrame("traffic sim");
     private TrafficLight light = new TrafficLight();
     Road roadStart = new Road(6, "horizontal",0, 270, "east", light); // fixed starting road on map
+    private int getX(){
+        return x;
+    }
+    private int getY(){
+        return y;
+    }
+    //north container
+    private JLabel info = new JLabel("click on screen to select x,y position");
+    private JLabel labelXPosField = new JLabel("Road x position");
+    private JTextField xPosField = new JTextField("0");
+    private JLabel labelYPosField = new JLabel("Road y position");
+    private JTextField yPosField = new JTextField("0");
+    private Container north = new Container();
 
     //south container
     private JButton startSim = new JButton("start");
     private JButton exitSim = new JButton("exit");
     private JButton removeRoad = new JButton("remove last road");
     private Container south = new Container();
+
     //west container
     private Container west = new Container();
     private JButton addSedan = new JButton("add sedan");
@@ -31,7 +47,7 @@ public class Simulator implements ActionListener, Runnable {
     private JRadioButton noLight = new JRadioButton("traffic light(false)");
     //road length
     private JLabel label = new JLabel("Enter road length");
-    private JTextField length = new JTextField();
+    private JTextField length = new JTextField("5");
 
     private Simulator(){
 
@@ -39,6 +55,15 @@ public class Simulator implements ActionListener, Runnable {
         frame.setSize(1200,700);
         frame.setLayout(new BorderLayout());
         frame.add(roadStart, BorderLayout.CENTER);
+        roadStart.addMouseListener(this);
+        //north side info
+        north.setLayout(new GridLayout(1, 5));
+        north.add(info);
+        north.add(labelXPosField);
+        north.add(xPosField);
+        north.add(labelYPosField);
+        north.add(yPosField);
+        frame.add(north, BorderLayout.NORTH);
 
         //buttons on the south side
         south.setLayout(new GridLayout(1, 3));
@@ -141,7 +166,7 @@ public class Simulator implements ActionListener, Runnable {
             String orientation = "horizontal";
             String direction = "";
             int xPos = 0;
-            int yPos = 270;
+            int yPos = 0;
             Boolean lightOnRoad = false;
             if(vertical.isSelected()){
                 orientation = "vertical";
@@ -164,12 +189,12 @@ public class Simulator implements ActionListener, Runnable {
                 length.setText("5");
             }
             if (orientation.equals("horizontal")){
-                yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
-                xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
+                yPos = Integer.parseInt(yPosField.getText());
+                xPos = Integer.parseInt(xPosField.getText());
             }
             else{
-                xPos = Integer.parseInt(JOptionPane.showInputDialog("enter road y Position"));
-                yPos = Integer.parseInt(JOptionPane.showInputDialog("enter road x Position"));
+                xPos = Integer.parseInt(yPosField.getText());
+                yPos = Integer.parseInt(xPosField.getText());
             }
             while(incorrect){
                 direction = (JOptionPane.showInputDialog("enter direction of traffic")).toLowerCase();
@@ -193,6 +218,26 @@ public class Simulator implements ActionListener, Runnable {
             frame.repaint();
 
         }
+    }
+    @Override
+    public void mouseClicked(MouseEvent e){
+        x = e.getX();
+        y = e.getY();
+        xPosField.setText(Integer.toString(getX()));
+        yPosField.setText(Integer.toString(getY()));
+    }
+    @Override
+    public void mousePressed(MouseEvent e){}
+
+    @Override
+    public void mouseReleased(MouseEvent e){}
+
+    @Override
+    public void mouseEntered(MouseEvent e){}
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
     }
 
     @Override
