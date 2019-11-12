@@ -35,11 +35,11 @@ public class Car {
         this.road = road;
     }
     private boolean checkIfAtEndOfRoad(){
-        if(road.getTrafficDirection().equals("east") || road.getTrafficDirection().equals("south")){
-            return (xPos+width >= (road.getRoadLength()*25) + road.getRoadXPos());
+        if(getRoadCarIsOn().getTrafficDirection().equals("east") || getRoadCarIsOn().getTrafficDirection().equals("south")){
+            return (xPos+width >= getRoadCarIsOn().getEndRoadXPos());
         }
-        else if(road.getTrafficDirection().equals("west") || road.getTrafficDirection().equals("north")){
-            return (xPos <= (road.getRoadXPos()));
+        else if(getRoadCarIsOn().getTrafficDirection().equals("west") || getRoadCarIsOn().getTrafficDirection().equals("north")){
+            return (xPos <= road.getRoadXPos());
         }
         else
             return true;
@@ -125,8 +125,8 @@ public class Car {
                 try {
                     Road r = nextRoad();
                     setCurrentRoad(r);
-                    if(road.getOrientation().equals("horizontal") && road.getTrafficDirection().equals("east") || road.getOrientation().equals("vertical") && road.getTrafficDirection().equals("south")) {
-                        for (int x = getRoadCarIsOn().getRoadXPos(); x < getRoadCarIsOn().getRoadLength()*25; x = x + 30) {
+                    if(r.getOrientation().equals("horizontal") && r.getTrafficDirection().equals("east") || r.getOrientation().equals("vertical") && r.getTrafficDirection().equals("south")) {
+                        for (int x = r.getRoadXPos(); x + getCarWidth() < r.getRoadLength()*25+ r.getEndRoadXPos(); x = x + 30) {
                             setCarXPosition(x);
                             setCarYPosition(getRoadCarIsOn().getRoadYPos()+5);
                             if(!collision(x, this)){
@@ -134,8 +134,8 @@ public class Car {
                             }
                         }
                     }
-                    else if(road.getOrientation().equals("horizontal") && road.getTrafficDirection().equals("west") || road.getOrientation().equals("vertical") && road.getTrafficDirection().equals("north")){
-                        for (int x = getRoadCarIsOn().getRoadXPos() + getRoadCarIsOn().getRoadLength()*25 - getCarWidth(); x > getRoadCarIsOn().getRoadXPos(); x = x - 30) {
+                    else if(r.getOrientation().equals("horizontal") && r.getTrafficDirection().equals("west") || r.getOrientation().equals("vertical") && r.getTrafficDirection().equals("north")){
+                        for (int x = r.getRoadXPos() + r.getRoadLength()*25 - getCarWidth(); x > r.getRoadXPos(); x = x - 30) {
                             setCarXPosition(x);
                             setCarYPosition(getRoadCarIsOn().getRoadYPos()+5);
                             if(!collision(x, this)){

@@ -99,8 +99,8 @@ public class Road extends JPanel {
         this.orientation = orientation;
         this.roadXPos = xPos;
         this.roadYPos = yPos;
-        this.endRoadXPos = roadXPos + numOfSegments * 25;
-        this.endRoadYPos = roadYPos + numOfSegments * 25;
+        this.endRoadXPos = xPos + numOfSegments * 50;
+        this.endRoadYPos = yPos + numOfSegments * 50;
         this.trafficDirection = direction;
     }
     Road(int numOfSegments, String orientation, int xPos, int yPos, String direction, TrafficLight light){
@@ -110,8 +110,8 @@ public class Road extends JPanel {
         this.light = light;
         this.roadXPos = xPos;
         this.roadYPos = yPos;
-        this.endRoadXPos = roadXPos + numOfSegments * 25;
-        this.endRoadYPos = roadYPos + numOfSegments * 25;
+        this.endRoadXPos = xPos + numOfSegments * 50;
+        this.endRoadYPos = yPos + numOfSegments * 50;
         this.trafficDirection = direction;
 
     }

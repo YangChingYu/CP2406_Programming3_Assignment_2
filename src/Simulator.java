@@ -48,6 +48,12 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
     //road length
     private JLabel label = new JLabel("Enter road length");
     private JTextField length = new JTextField("5");
+    //traffic direction
+    private ButtonGroup selections3 = new ButtonGroup();
+    private JRadioButton northDirection = new JRadioButton("north");
+    private JRadioButton southDirection = new JRadioButton("south");
+    private JRadioButton westDirection = new JRadioButton("west");
+    private JRadioButton eastDirection = new JRadioButton("east");
 
     private Simulator(){
 
@@ -76,13 +82,16 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
         frame.add(south, BorderLayout.SOUTH);
 
         //buttons on west side
-        west.setLayout(new GridLayout(9,1));
+        west.setLayout(new GridLayout(13,1));
         west.add(addSedan);
         addSedan.addActionListener(this);
         west.add(addBus);
         addBus.addActionListener(this);
         west.add(addRoad);
         addRoad.addActionListener(this);
+        west.add(label);
+        west.add(length);
+        length.addActionListener(this);
 
         //radio buttons on west side
         selections.add(vertical);
@@ -101,9 +110,21 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
         noLight.addActionListener(this);
         noLight.setSelected(true);
 
-        west.add(label);
-        west.add(length);
-        length.addActionListener(this);
+        selections3.add(northDirection);
+        selections3.add(southDirection);
+        selections3.add(eastDirection);
+        selections3.add(westDirection);
+        west.add(northDirection);
+        northDirection.addActionListener(this);
+        northDirection.setEnabled(false);
+        west.add(southDirection);
+        southDirection.addActionListener(this);
+        southDirection.setEnabled(false);
+        west.add(eastDirection);
+        eastDirection.addActionListener(this);
+        eastDirection.setSelected(true);
+        west.add(westDirection);
+        westDirection.addActionListener(this);
 
         frame.add(west, BorderLayout.WEST);
         frame.setVisible(true);
@@ -116,14 +137,25 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
     public static void main(String[] args){
         new Simulator();
         Map map = new Map();
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
+        if(horizontal.isSelected()){
+            northDirection.setEnabled(false);
+            southDirection.setEnabled(false);
+            eastDirection.setEnabled(true);
+            westDirection.setEnabled(true);
+        }
+        else if(vertical.isSelected()){
+            eastDirection.setEnabled(false);
+            westDirection.setEnabled(false);
+            northDirection.setEnabled(true);
+            southDirection.setEnabled(true);
+        }
         if(source == startSim){
-            if(running == false) {
+            if(!running) {
                 running = true;
                 Thread t = new Thread(this);
                 t.start();
@@ -161,10 +193,9 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
             }
         }
         if(source == addRoad){
-            Boolean incorrect = true;
             int roadLength = 5;
             String orientation = "horizontal";
-            String direction = "";
+            String direction = "east";
             int xPos = 0;
             int yPos = 0;
             Boolean lightOnRoad = false;
@@ -180,32 +211,25 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
             else if(noLight.isSelected()){
                 lightOnRoad = false;
             }
-            try {
-                roadLength = Integer.parseInt(length.getText());
-                incorrect = false;
-            }
-            catch (Exception error) {
-                JOptionPane.showMessageDialog(null, "road length needs an integer");
-                length.setText("5");
-            }
+            if(eastDirection.isSelected()){ direction = "east";}
+            else if(westDirection.isSelected()) { direction = "west";}
+            else if(northDirection.isSelected()) { direction = "north";}
+            else if(southDirection.isSelected()){direction = "south";}
+
             if (orientation.equals("horizontal")){
                 yPos = Integer.parseInt(yPosField.getText());
                 xPos = Integer.parseInt(xPosField.getText());
             }
-            else{
+            else if(orientation.equals("vertical")){
                 xPos = Integer.parseInt(yPosField.getText());
                 yPos = Integer.parseInt(xPosField.getText());
             }
-            while(incorrect){
-                direction = (JOptionPane.showInputDialog("enter direction of traffic")).toLowerCase();
-                if(direction.equals("east") && orientation.equals("horizontal") || direction.equals("west") && orientation.equals("horizontal")){
-                    incorrect = false;
-                }
-                else if(direction.equals("north") && orientation.equals("vertical") || direction.equals("south") && orientation.equals("vertical")){
-                    incorrect = false;
-                }
-                else
-                    JOptionPane.showMessageDialog(null, "incorrect input ");
+            try {
+                roadLength = Integer.parseInt(length.getText());
+            }
+            catch (Exception error) {
+                JOptionPane.showMessageDialog(null, "road length needs an integer");
+                length.setText("5");
             }
             if(lightOnRoad) {
                 Road road = new Road(roadLength, orientation, xPos, yPos, direction, new TrafficLight());
@@ -297,8 +321,10 @@ public class Simulator implements ActionListener, Runnable, MouseListener {
                             }
                             carCollision = false;
                         }
+
                 }
                 frame.repaint();
+
 
         }
     }
