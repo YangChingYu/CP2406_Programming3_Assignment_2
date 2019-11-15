@@ -82,33 +82,114 @@ public class Car {
     private int getIndexOfCurrentRoad(){
         return Map.roads.indexOf(road);
     }
-    private Road nextRoad() {
+    private Road nextRoad(){
+        int otherRoadXPos;
+        int otherRoadYPos;
+        int otherRoadEndXPos;
+        int otherRoadEndYPos;
+        int currentRoadXPos;
+        int currentRoadYPos;
+        int currentRoadEndXPos;
+        int currentRoadEndYPos;
         Road currentRoad = Map.roads.get(getIndexOfCurrentRoad());
         Road nextRoad = Map.roads.get(0);
         ArrayList<Integer> xPositions = new ArrayList<Integer>();
+        ArrayList<Integer> yPositions = new ArrayList<Integer>();
+        if(currentRoad.getOrientation().equals("vertical")){
+            currentRoadXPos = currentRoad.getRoadYPos();
+            currentRoadYPos = currentRoad.getRoadXPos();
+            currentRoadEndXPos = currentRoad.getEndRoadYPos();
+            currentRoadEndYPos = currentRoad.getEndRoadXPos();
+        }
+        else{
+            currentRoadXPos = currentRoad.getRoadXPos();
+            currentRoadYPos = currentRoad.getRoadYPos();
+            currentRoadEndXPos = currentRoad.getEndRoadXPos();
+            currentRoadEndYPos = currentRoad.getEndRoadYPos();
+        }
         for (int i = 0; i < Map.roads.size(); i++) {
-            if(Map.roads.get(i) != currentRoad) {
-                xPositions.add(Map.roads.get(i).getRoadXPos());
+            Road r = Map.roads.get(i);
+            if(r != currentRoad) {
+
+                if(r.getOrientation().equals("horizontal")){
+                    otherRoadXPos = r.getRoadXPos();
+                    otherRoadYPos = r.getRoadYPos();
+                    otherRoadEndXPos = r.getEndRoadXPos();
+                    otherRoadEndYPos = r.getEndRoadYPos();
+                }
+                else{
+                    otherRoadXPos = r.getRoadYPos();
+                    otherRoadYPos = r.getRoadXPos();
+                    otherRoadEndXPos = r.getEndRoadYPos();
+                    otherRoadEndYPos = r.getEndRoadXPos();
+                }
+                if(currentRoad.getTrafficDirection().equals("east") && otherRoadXPos > currentRoadEndXPos) {
+                    xPositions.add(otherRoadXPos);
+                }
+                else if(currentRoad.getTrafficDirection().equals("west") && otherRoadEndXPos < currentRoadXPos ){
+                    xPositions.add(otherRoadEndXPos);
+                }
+                else if(currentRoad.getTrafficDirection().equals("north") && otherRoadEndYPos < currentRoadYPos) {
+                    yPositions.add(otherRoadEndYPos);
+                }
+                else if(currentRoad.getTrafficDirection().equals("south") && otherRoadYPos > currentRoadEndYPos){
+                    yPositions.add(otherRoadYPos);
+                }
             }
         }
         int num;
+        int num2;
         num = getCarXPosition(); //trying to find road with x position closest to this x position
+        num2 = getCarYPosition(); // trying to find road with y position closest to this y position
         int index = 0;
+        int index2 =0;
         int difference_1 = 10000;
-        for (int j = 0; j < xPositions.size(); j++) { // loops through every position
-            int Difference_x = Math.abs(xPositions.get(j) - num);
-            if (Difference_x < difference_1) { // checks if difference is getting smaller
-                index = j;
-                difference_1 = Difference_x;
+        int difference_2 = 10000;
+        if(currentRoad.getTrafficDirection().equals("east") || currentRoad.getTrafficDirection().equals("west")) {
+            for (int j = 0; j < xPositions.size(); j++) { // loops through every position
+                int Difference_x = Math.abs(xPositions.get(j) - num);
+                if (Difference_x < difference_1) { // checks if difference is getting smaller
+                    index = j;
+                    difference_1 = Difference_x;
+                }
             }
         }
-        int closestXPosition = xPositions.get(index);
+        else if(currentRoad.getTrafficDirection().equals("south") || currentRoad.getTrafficDirection().equals("north")) {
+            for (int j = 0; j < xPositions.size(); j++) { // loops through every position
+                int Difference_y = Math.abs(yPositions.get(j) - num2);
+                if (Difference_y < difference_2) { // checks if difference is getting smaller
+                    index2 = j;
+                    difference_2 = Difference_y;
+                }
+            }
+        }
+        int closestXPosition = 0;
+        int closestYPosition = 0;
+        if(currentRoad.getTrafficDirection().equals("east") || currentRoad.getTrafficDirection().equals("west")){
+            closestXPosition = xPositions.get(index);
+        }
+        else {
+            closestYPosition = yPositions.get(index2);
+        }
+        System.out.println(closestXPosition);
+
         for(int z = 0; z<Map.roads.size();z++){
-            Road road = Map.roads.get(z);
-            if(road.getRoadXPos() == closestXPosition && road != currentRoad){
-                nextRoad = road;
+            Road r = Map.roads.get(z);
+            if ((r.getRoadXPos() == closestXPosition || r.getEndRoadXPos() == closestXPosition) && r.getOrientation().equals("horizontal")) {
+               nextRoad = r;
+            }
+            else if ((r.getRoadYPos() == closestXPosition || r.getEndRoadYPos() == closestXPosition) && r.getOrientation().equals("vertical")){
+                nextRoad = r;
+            }
+            if ((r.getRoadYPos() == closestYPosition || r.getEndRoadXPos() == closestYPosition) && r.getOrientation().equals("horizontal")) {
+                nextRoad = r;
+            }
+            else if ((r.getRoadXPos() == closestYPosition || r.getEndRoadXPos() == closestYPosition) && r.getOrientation().equals("vertical")){
+                nextRoad = r;
             }
         }
+        xPositions.clear();
+        yPositions.clear();
         return nextRoad;
     }
 
